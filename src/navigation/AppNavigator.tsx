@@ -1,27 +1,29 @@
 // src/navigation/AppNavigator.tsx
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { NavigationContainer } from "@react-navigation/native";
 
 // Telas
 import { LoginScreen } from "../screens/auth/LoginScreen";
 import { KitchenScreen } from "../screens/kitchen/KitchenScreen";
 import { OrderDetailsScreen } from "../screens/orderDetails/OrderDetailsScreen";
 import { OrdersScreen } from "../screens/orders/OrdersScreen";
+import { useAuth } from "../contexts/AuthContext";
+import ButtonLogout from "../components/ui/ButtonLogout";
+import { Order } from "../types/orders";
 
 // Tipagem das rotas
 export type RootStackParamList = {
   Login: undefined;
   Kitchen: undefined;
-  OrderDetails: { orderId: number };
+  OrderDetails: { order: Order };
   Orders: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export const AppNavigator = () => {
-  // Em uma aplicação real, você teria um estado de autenticação aqui
-  const isAuthenticated = false; // Substitua pela sua lógica de autenticação
+  const { user } = useAuth();
+  const isAuthenticated = !!user;
 
   return (
     <Stack.Navigator
@@ -39,19 +41,25 @@ export const AppNavigator = () => {
         // Rotas autenticadas
         <>
           <Stack.Screen
+            name="Orders"
+            component={OrdersScreen}
+            options={{
+              title: "Todos os Pedidos",
+              headerRight: () => <ButtonLogout />,
+            }}
+          />
+          <Stack.Screen
             name="Kitchen"
             component={KitchenScreen}
-            options={{ title: "Cozinha" }}
+            options={{ title: "Cozinha", headerRight: () => <ButtonLogout /> }}
           />
           <Stack.Screen
             name="OrderDetails"
             component={OrderDetailsScreen}
-            options={{ title: "Detalhes do Pedido" }}
-          />
-          <Stack.Screen
-            name="Orders"
-            component={OrdersScreen}
-            options={{ title: "Todos os Pedidos" }}
+            options={{
+              title: "Detalhes do Pedido",
+              headerRight: () => <ButtonLogout />,
+            }}
           />
         </>
       ) : (

@@ -1,47 +1,92 @@
 // src/screens/orders/OrdersScreen.tsx
-import React from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../../navigation/AppNavigator";
+import { useAuth } from "../../contexts/AuthContext";
+import { api, setAuthToken } from "../../services/api";
+import { styles } from "./styles";
+import { theme } from "../../constants/theme";
+import { Order } from "../../types/orders";
+import { formatCurrencyBR } from "../../utils/formatter";
 
-const orders = [
-  { id: 123, table: 5, status: "preparando" },
-  { id: 124, table: 3, status: "pendente" },
-  { id: 125, table: 7, status: "pronto" },
-];
+type NavigationProps = NativeStackNavigationProp<RootStackParamList, "Orders">;
 
 export const OrdersScreen = () => {
+  const navigation = useNavigation<NavigationProps>();
+  const { user, token } = useAuth();
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const response = await api.get("/orders/orders");
+
+        const allOrders: Order[] = response.data;
+
+        // Filtra apenas os pedidos do usuário logado (caso seja atendente)
+        const filteredOrders =
+          user?.role === "atendente"
+            ? allOrders.filter((order) => order.attendantId === user.id)
+            : allOrders;
+
+        setOrders(filteredOrders);
+      } catch (error) {
+        console.error("Erro ao buscar pedidos:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchOrders();
+  }, [user]);
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={theme.colors.primary} />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Todos os Pedidos</Text>
+      <Text style={styles.title}>Seus Pedidos</Text>
+      {orders.length === 0 ? (
+        <Text style={styles.emptyText}>Não há pedidos feitos.</Text>
+      ) : (
+        <FlatList
+          data={orders}
+          keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={styles.list}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.orderCard}
+              onPress={() =>
+                navigation.navigate("OrderDetails", { order: item })
+              }
+            >
+              <Text style={styles.orderText}>Cliente: {item.customerName}</Text>
+              <Text style={styles.orderText}>Status: {item.status}</Text>
+              <Text style={styles.orderText}>
+                Total: {formatCurrencyBR(item.total)}
+              </Text>
+              <Text style={styles.orderText}>
+                Mesa: {item.tableNumber ?? "—"}
+              </Text>
+            </TouchableOpacity>
+          )}
+        />
+      )}
 
-      <FlatList
-        data={orders}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.orderCard}>
-            <Text>Pedido #{item.id}</Text>
-            <Text>Mesa: {item.table}</Text>
-            <Text>Status: {item.status}</Text>
-          </View>
-        )}
-      />
+      <Text style={styles.orderTextNameUser}>{user?.name}</Text>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
-  orderCard: {
-    padding: 15,
-    marginBottom: 10,
-    backgroundColor: "#f5f5f5",
-    borderRadius: 8,
-  },
-});

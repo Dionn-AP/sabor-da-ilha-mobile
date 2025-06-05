@@ -8,18 +8,42 @@ import {
   Alert,
 } from "react-native";
 import { theme } from "../../constants/theme";
-import { api, setAuthToken } from "../../services/api";
+import LogoBurger from "../../assets/images/burger.svg";
 import { styles } from "./styles";
+import { useAuth } from "../../contexts/AuthContext";
+import { useNavigation } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../../navigation/AppNavigator";
+
+type AuthNav = NativeStackNavigationProp<RootStackParamList>;
 
 export const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const { login, user } = useAuth();
+  const navigation = useNavigation<AuthNav>();
+
   const handleLogin = async () => {
     try {
-      const response = await api.post("/auth/login", { email, password });
-      setAuthToken(response.data.token);
-      // TODO: Navegar para a próxima tela
+      await login(email, password);
+
+      if (!user) return;
+
+      switch (user.role) {
+        case "atendente":
+          navigation.navigate("Orders");
+          break;
+        case "cozinha":
+          navigation.navigate("Kitchen");
+          break;
+        case "gerente":
+        case "master":
+          navigation.navigate("Orders"); // ou outra tela padrão
+          break;
+        default:
+          Alert.alert("Erro", "Tipo de usuário não reconhecido.");
+      }
     } catch (error) {
       console.error(error);
       Alert.alert("Erro", "Não foi possível fazer login.");
@@ -29,6 +53,8 @@ export const LoginScreen = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Sabor da Ilha</Text>
+
+      <LogoBurger style={styles.logo} width={100} height={100} />
 
       <View style={styles.inputContainer}>
         <TextInput

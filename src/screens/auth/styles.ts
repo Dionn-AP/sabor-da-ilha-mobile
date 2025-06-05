@@ -11,9 +11,9 @@ export const styles = StyleSheet.create({
     backgroundColor: theme.colors.background,
   },
   title: {
-    fontSize: 28,
+    fontSize: 32,
     fontWeight: "bold",
-    marginBottom: 40,
+    marginBottom: 10,
     color: theme.colors.primary,
     fontFamily: theme.fonts.bold,
   },
@@ -32,9 +32,8 @@ export const styles = StyleSheet.create({
   },
   input: {
     width: "100%",
-    height: 50,
+    height: 55,
     padding: theme.spacing.md,
-    marginBottom: 20,
     borderRadius: theme.radii.md,
     backgroundColor: theme.colors.cardBackground,
     color: theme.colors.text,
@@ -56,5 +55,9 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     fontFamily: theme.fonts.bold,
+  },
+  logo: {
+    alignItems: "center",
+    marginBottom: 12,
   },
 });
