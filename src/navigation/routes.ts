@@ -5,4 +5,5 @@ export const ROUTES = {
   ORDER_DETAILS: "OrderDetails",
   ORDERS: "Orders",
   NEWORDERS: "NewOrders",
+  UNAUTHORIZED: "Unauthorized",
 } as const;

@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { api, setAuthToken } from "../services/api";
@@ -34,6 +40,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const isAuthenticated = !!token;
 
+  useEffect(() => {
+    const loadStoredData = async () => {
+      try {
+        const storedToken = await AsyncStorage.getItem("token");
+        const storedUser = await AsyncStorage.getItem("user");
+
+        if (storedToken && storedUser) {
+          setToken(storedToken);
+          setUser(JSON.parse(storedUser));
+          setAuthToken(storedToken); // seta no axios
+        }
+      } catch (error) {
+        console.error("Erro ao carregar dados salvos", error);
+      }
+    };
+
+    loadStoredData();
+  }, []);
+
+  // Login
   const login = async (email: string, password: string) => {
     try {
       const response = await api.post("/auth/login", { email, password });
@@ -44,7 +70,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(receivedUser);
       setAuthToken(receivedToken);
 
-      // (Opcional) salvar localmente
+      // Salva localmente
       await AsyncStorage.setItem("token", receivedToken);
       await AsyncStorage.setItem("user", JSON.stringify(receivedUser));
     } catch (error) {
@@ -54,10 +80,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  // Logout
   const logout = async () => {
     setToken(null);
     setUser(null);
-    setAuthToken("");
+    setAuthToken(""); // limpa token no axios
     await AsyncStorage.removeItem("token");
     await AsyncStorage.removeItem("user");
   };

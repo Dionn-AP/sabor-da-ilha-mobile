@@ -5,6 +5,7 @@ export type RootStackParamList = {
   OrderDetails: { orderId: number };
   Orders: undefined;
   NewOrders: undefined;
+  Unauthorized: undefined;
 };
 
 // Extensão para useNavigation

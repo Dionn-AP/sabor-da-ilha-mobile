@@ -4,8 +4,8 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { theme } from "../../constants/theme";
 import LogoBurger from "../../assets/images/burger.svg";
@@ -15,6 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../navigation/AppNavigator";
 import Entypo from "@expo/vector-icons/Entypo";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type AuthNav = NativeStackNavigationProp<RootStackParamList>;
 
@@ -23,14 +24,20 @@ export const LoginScreen = () => {
   const [password, setPassword] = useState("");
   const [openEye, setOpenEye] = useState(true);
 
-  const { login, user } = useAuth();
+  const { login, loading, setLoading } = useAuth();
   const navigation = useNavigation<AuthNav>();
 
   const handleLogin = async () => {
     try {
+      setLoading(true);
       await login(email, password);
 
-      if (!user) return;
+      const storedUser = await AsyncStorage.getItem("user");
+      if (!storedUser) {
+        throw new Error("Usuário não encontrado após login.");
+      }
+
+      const user = JSON.parse(storedUser);
 
       switch (user.role) {
         case "atendente":
@@ -41,13 +48,16 @@ export const LoginScreen = () => {
           break;
         case "gerente":
         case "master":
-          navigation.navigate("Orders"); // ou outra tela padrão
+          navigation.navigate("Orders");
           break;
         default:
           Alert.alert("Erro", "Tipo de usuário não reconhecido.");
       }
+
+      setLoading(false);
     } catch (error) {
-      console.error(error);
+      console.error("Erro ao fazer login:", error);
+      setLoading(false);
       Alert.alert("Erro", "Não foi possível fazer login.");
     }
   };
@@ -86,8 +96,18 @@ export const LoginScreen = () => {
         />
       </View>
 
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Entrar</Text>
+      <TouchableOpacity
+        disabled={loading}
+        style={styles.button}
+        onPress={handleLogin}
+      >
+        <Text style={styles.buttonText}>
+          {loading ? (
+            <ActivityIndicator color={theme.colors.divider} size="large" />
+          ) : (
+            "Entrar"
+          )}
+        </Text>
       </TouchableOpacity>
     </View>
   );
