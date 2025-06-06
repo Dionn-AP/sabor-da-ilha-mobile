@@ -5,13 +5,11 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  FlatList,
   ScrollView,
   Alert,
   ActivityIndicator,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 import { theme } from "../../constants/theme";
 import { useAuth } from "../../contexts/AuthContext"; // ajustar conforme seu contexto
@@ -19,6 +17,7 @@ import { hasOrderPermission } from "../../utils/accessVerify";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { api } from "../../services/api";
+import { styles } from "./styles";
 
 interface OrderItem {
   productId: number;
@@ -243,21 +242,24 @@ export const NewOrderScreen = () => {
 
           <TouchableOpacity
             onPress={() => handleRemoveItem(index)}
-            style={{ marginTop: theme.spacing.sm }}
+            style={{ marginTop: theme.spacing.lg }}
           >
-            <Text
-              style={{
-                color: theme.colors.error,
-                fontFamily: theme.fonts.bold,
-              }}
-            >
+            <View style={styles.removeAndAddItems}>
               <AntDesign
                 name="minuscircle"
                 size={24}
                 color={theme.colors.error}
-              />{" "}
-              Remover Item
-            </Text>
+                style={{ marginRight: 8 }}
+              />
+              <Text
+                style={{
+                  color: theme.colors.error,
+                  fontFamily: theme.fonts.bold,
+                }}
+              >
+                Remover Item
+              </Text>
+            </View>
           </TouchableOpacity>
         </View>
       ))}
@@ -266,16 +268,19 @@ export const NewOrderScreen = () => {
         onPress={handleAddItem}
         style={{ marginBottom: theme.spacing.lg }}
       >
-        <Text
-          style={{ color: theme.colors.accent, fontFamily: theme.fonts.bold }}
-        >
+        <View style={styles.removeAndAddItems}>
           <MaterialIcons
             name="add-circle"
             size={29}
             color={theme.colors.primary}
-          />{" "}
-          Adicionar Item
-        </Text>
+            style={{ marginRight: 8 }}
+          />
+          <Text
+            style={{ color: theme.colors.accent, fontFamily: theme.fonts.bold }}
+          >
+            Adicionar Item
+          </Text>
+        </View>
       </TouchableOpacity>
 
       {loading ? (

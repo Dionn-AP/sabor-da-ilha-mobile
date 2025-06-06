@@ -17,6 +17,7 @@ import { theme } from "../../constants/theme";
 import { Order } from "../../types/orders";
 import { formatCurrencyBR } from "../../utils/formatter";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { getStatusColor } from "../../utils/statusColors";
 
 type NavigationProps = NativeStackNavigationProp<RootStackParamList, "Orders">;
 
@@ -75,7 +76,14 @@ export const OrdersScreen = () => {
               }
             >
               <Text style={styles.orderText}>Cliente: {item.customerName}</Text>
-              <Text style={styles.orderText}>Status: {item.status}</Text>
+              <Text
+                style={[
+                  styles.orderTextStatus,
+                  { color: getStatusColor(item.status) },
+                ]}
+              >
+                {item.status.toUpperCase()}
+              </Text>
               <Text style={styles.orderText}>
                 Total: {formatCurrencyBR(item.total)}
               </Text>

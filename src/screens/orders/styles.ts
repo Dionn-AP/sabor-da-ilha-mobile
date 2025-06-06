@@ -24,6 +24,7 @@ export const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   orderCard: {
+    position: "relative",
     backgroundColor: theme.colors.cardBackground,
     padding: 16,
     borderRadius: 10,
@@ -34,6 +35,14 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     color: theme.colors.text,
   },
+  orderTextStatus: {
+    fontSize: 12,
+    fontWeight: "bold",
+    color: theme.colors.text,
+    position: "absolute",
+    right: 16,
+    bottom: 16,
+  },
   emptyText: {
     fontSize: 16,
     color: theme.colors.text,
@@ -42,7 +51,7 @@ export const styles = StyleSheet.create({
   },
   orderTextNameUser: {
     fontSize: 16,
-    marginBottom: 28,
+    marginBottom: 32,
     textAlign: "center",
     color: theme.colors.secondary,
   },
