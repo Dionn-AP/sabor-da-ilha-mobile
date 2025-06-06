@@ -5,6 +5,7 @@ import { theme } from "../../constants/theme";
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
+    position: "relative",
     justifyContent: "center",
     alignItems: "center",
     padding: theme.spacing.lg,
@@ -26,8 +27,11 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: theme.colors.divider,
     marginBottom: 20,
+    position: "relative",
   },
   inputIcon: {
+    position: "absolute",
+    right: 0,
     padding: theme.spacing.md,
   },
   input: {

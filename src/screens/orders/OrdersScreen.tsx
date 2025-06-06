@@ -16,6 +16,7 @@ import { styles } from "./styles";
 import { theme } from "../../constants/theme";
 import { Order } from "../../types/orders";
 import { formatCurrencyBR } from "../../utils/formatter";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 type NavigationProps = NativeStackNavigationProp<RootStackParamList, "Orders">;
 
@@ -85,7 +86,17 @@ export const OrdersScreen = () => {
           )}
         />
       )}
-
+      <TouchableOpacity
+        activeOpacity={0.7}
+        onPress={() => navigation.navigate("NewOrders")}
+      >
+        <AntDesign
+          style={styles.iconAddNewOrder}
+          name="pluscircle"
+          size={50}
+          color={theme.colors.primary}
+        />
+      </TouchableOpacity>
       <Text style={styles.orderTextNameUser}>{user?.name}</Text>
     </View>
   );

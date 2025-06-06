@@ -14,12 +14,14 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../navigation/AppNavigator";
+import Entypo from "@expo/vector-icons/Entypo";
 
 type AuthNav = NativeStackNavigationProp<RootStackParamList>;
 
 export const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [openEye, setOpenEye] = useState(true);
 
   const { login, user } = useAuth();
   const navigation = useNavigation<AuthNav>();
@@ -59,7 +61,7 @@ export const LoginScreen = () => {
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
-          placeholder="Email"
+          placeholder="E-mail"
           placeholderTextColor={theme.colors.text + "80"}
           value={email}
           onChangeText={setEmail}
@@ -71,9 +73,16 @@ export const LoginScreen = () => {
           style={styles.input}
           placeholder="Senha"
           placeholderTextColor={theme.colors.text + "80"}
-          secureTextEntry
+          secureTextEntry={openEye}
           value={password}
           onChangeText={setPassword}
+        />
+        <Entypo
+          style={styles.inputIcon}
+          onPress={() => setOpenEye(!openEye)}
+          name={!openEye ? "eye" : "eye-with-line"}
+          size={24}
+          color={theme.colors.primary}
         />
       </View>
 

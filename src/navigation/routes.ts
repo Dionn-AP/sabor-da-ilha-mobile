@@ -4,4 +4,5 @@ export const ROUTES = {
   KITCHEN: "Kitchen",
   ORDER_DETAILS: "OrderDetails",
   ORDERS: "Orders",
+  NEWORDERS: "NewOrders",
 } as const;

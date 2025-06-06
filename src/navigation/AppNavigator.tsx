@@ -10,6 +10,7 @@ import { OrdersScreen } from "../screens/orders/OrdersScreen";
 import { useAuth } from "../contexts/AuthContext";
 import ButtonLogout from "../components/ui/ButtonLogout";
 import { Order } from "../types/orders";
+import { NewOrderScreen } from "../screens/newOrder/NewOrderScreen";
 
 // Tipagem das rotas
 export type RootStackParamList = {
@@ -17,6 +18,7 @@ export type RootStackParamList = {
   Kitchen: undefined;
   OrderDetails: { order: Order };
   Orders: undefined;
+  NewOrders: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -58,6 +60,14 @@ export const AppNavigator = () => {
             component={OrderDetailsScreen}
             options={{
               title: "Detalhes do Pedido",
+              headerRight: () => <ButtonLogout />,
+            }}
+          />
+          <Stack.Screen
+            name="NewOrders"
+            component={NewOrderScreen}
+            options={{
+              title: "Novo Pedido",
               headerRight: () => <ButtonLogout />,
             }}
           />

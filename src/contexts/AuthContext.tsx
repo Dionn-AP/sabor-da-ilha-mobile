@@ -17,6 +17,8 @@ type AuthContextData = {
   isAuthenticated: boolean;
   user: User | null;
   token: string | null;
+  loading: boolean;
+  setLoading: (value: boolean) => void;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
 };
@@ -28,6 +30,7 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const isAuthenticated = !!token;
 
@@ -67,6 +70,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         token,
         login,
         logout,
+        loading,
+        setLoading,
       }}
     >
       {children}

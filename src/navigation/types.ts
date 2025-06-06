@@ -4,7 +4,7 @@ export type RootStackParamList = {
   Kitchen: undefined;
   OrderDetails: { orderId: number };
   Orders: undefined;
-  // Adicione outras rotas conforme necessário
+  NewOrders: undefined;
 };
 
 // Extensão para useNavigation

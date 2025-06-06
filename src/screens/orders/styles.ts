@@ -46,4 +46,9 @@ export const styles = StyleSheet.create({
     textAlign: "center",
     color: theme.colors.secondary,
   },
+  iconAddNewOrder: {
+    position: "absolute",
+    right: 0,
+    bottom: 10,
+  },
 });
