@@ -7,9 +7,8 @@ import {
   FlatList,
   ActivityIndicator,
   TouchableOpacity,
-  StyleSheet,
+  RefreshControl,
 } from "react-native";
-import { useAuth } from "../../contexts/AuthContext";
 import { api } from "../../services/api";
 import { theme } from "../../constants/theme";
 import { styles } from "./styles";
@@ -31,9 +30,9 @@ type Order = {
 };
 
 export const KitchenScreen = () => {
-  const { logout } = useAuth();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   const fetchOrders = async () => {
     try {
@@ -44,6 +43,7 @@ export const KitchenScreen = () => {
       console.error("Erro ao buscar pedidos:", error);
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
   };
 
@@ -142,6 +142,15 @@ export const KitchenScreen = () => {
           keyExtractor={(item) => item.id.toString()}
           renderItem={renderItem}
           contentContainerStyle={styles.listContainer}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={() => {
+                setRefreshing(true);
+                fetchOrders();
+              }}
+            />
+          }
         />
       )}
     </View>
