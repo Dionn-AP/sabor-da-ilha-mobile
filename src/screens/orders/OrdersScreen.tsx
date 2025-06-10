@@ -6,6 +6,7 @@ import {
   FlatList,
   TouchableOpacity,
   ActivityIndicator,
+  RefreshControl,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -26,29 +27,31 @@ export const OrdersScreen = () => {
   const { user, token } = useAuth();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const response = await api.get("/orders/orders");
-
-        const allOrders: Order[] = response.data;
-
-        // Filtra apenas os pedidos do usuário logado (caso seja atendente)
-        const filteredOrders =
-          user?.role === "atendente"
-            ? allOrders.filter((order) => order.attendantId === user.id)
-            : allOrders;
-
-        setOrders(filteredOrders);
-      } catch (error) {
-        console.error("Erro ao buscar pedidos:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchOrders();
   }, [user]);
+
+  const fetchOrders = async () => {
+    try {
+      const response = await api.get("/orders/orders");
+
+      const allOrders: Order[] = response.data;
+
+      const filteredOrders =
+        user?.role === "atendente"
+          ? allOrders.filter((order) => order.attendantId === parseInt(user.id))
+          : allOrders;
+
+      setOrders(filteredOrders);
+    } catch (error) {
+      console.error("Erro ao buscar pedidos:", error);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -68,6 +71,15 @@ export const OrdersScreen = () => {
           data={orders}
           keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={styles.list}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={() => {
+                setRefreshing(true);
+                fetchOrders();
+              }}
+            />
+          }
           renderItem={({ item }) => (
             <TouchableOpacity
               style={styles.orderCard}

@@ -1,11 +1,15 @@
 // src/navigation/types.ts
 export type RootStackParamList = {
   Login: undefined;
+  Signup: undefined;
   Kitchen: undefined;
   OrderDetails: { orderId: number };
   Orders: undefined;
   NewOrders: undefined;
   Unauthorized: undefined;
+  Profile: undefined;
+  Dashboard: undefined;
+  Home: undefined;
 };
 
 // Extensão para useNavigation

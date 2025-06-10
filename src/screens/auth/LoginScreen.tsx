@@ -109,6 +109,18 @@ export const LoginScreen = () => {
           )}
         </Text>
       </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
+        <Text
+          style={{
+            marginTop: 16,
+            color: theme.colors.primary,
+            fontWeight: "bold",
+          }}
+        >
+          Criar uma conta
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };

@@ -8,16 +8,17 @@ import React, {
 import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { api, setAuthToken } from "../services/api";
+import { User } from "../types/user";
 
 // Tipos
 type Role = "atendente" | "cozinha" | "gerente" | "master";
 
-type User = {
-  id: number;
-  name: string;
-  email: string;
-  role: Role;
-};
+// type User = {
+//   id: number;
+//   name: string;
+//   email: string;
+//   role: Role;
+// };
 
 type AuthContextData = {
   isAuthenticated: boolean;

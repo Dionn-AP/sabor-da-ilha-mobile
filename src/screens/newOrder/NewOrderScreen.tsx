@@ -11,23 +11,22 @@ import {
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { useNavigation } from "@react-navigation/native";
-import { theme } from "../../constants/theme";
-import { useAuth } from "../../contexts/AuthContext"; // ajustar conforme seu contexto
-import { hasOrderPermission } from "../../utils/accessVerify";
+import { useAuth } from "../../contexts/AuthContext";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { api } from "../../services/api";
 import { styles } from "./styles";
+import { theme } from "../../constants/theme";
 
 interface OrderItem {
   productId: number;
-  quantity: number;
+  quantity: string;
   observations?: string;
 }
 
 export const NewOrderScreen = () => {
   const navigation = useNavigation();
-  const { user, loading, setLoading } = useAuth(); // Assumindo que você tem isso configurado
+  const { user, loading, setLoading } = useAuth();
   const [products, setProducts] = useState<Product[]>([]);
   const [items, setItems] = useState<OrderItem[]>([]);
   const [tableNumber, setTableNumber] = useState("");
@@ -39,12 +38,11 @@ export const NewOrderScreen = () => {
       const data = await fetchProducts();
       setProducts(data);
     };
-
     loadProducts();
   }, []);
 
   const handleAddItem = () => {
-    setItems([...items, { productId: products[0]?.id ?? 0, quantity: 1 }]);
+    setItems([...items, { productId: products[0]?.id ?? 0, quantity: "1" }]);
   };
 
   const handleRemoveItem = (index: number) => {
@@ -76,7 +74,7 @@ export const NewOrderScreen = () => {
           text: "Sim",
           style: "destructive",
           onPress: () => {
-            navigation.goBack(); // ou navegue para a tela de pedidos
+            navigation.goBack();
           },
         },
       ]
@@ -92,17 +90,22 @@ export const NewOrderScreen = () => {
       return;
     }
 
+    const formattedItems = items.map((item) => ({
+      ...item,
+      quantity: parseInt(item.quantity),
+    }));
+
     setLoading(true);
     try {
       await api.post("/orders/order", {
         tableNumber: Number(tableNumber),
         customerName,
         observations,
-        items,
+        items: formattedItems,
       });
 
       Alert.alert("Sucesso", "Pedido cadastrado com sucesso.");
-      navigation.navigate("Orders"); // Ajuste para o nome correto da tela
+      navigation.navigate("Orders");
     } catch (error: any) {
       Alert.alert(
         "Erro ao cadastrar",
@@ -124,81 +127,41 @@ export const NewOrderScreen = () => {
   };
 
   return (
-    <ScrollView
-      style={{
-        flex: 1,
-        backgroundColor: theme.colors.background,
-        padding: theme.spacing.md,
-      }}
-    >
-      <Text
-        style={{
-          fontFamily: theme.fonts.bold,
-          fontSize: 20,
-          color: theme.colors.primary,
-          marginBottom: theme.spacing.md,
-        }}
-      >
-        Novo Pedido
-      </Text>
+    <ScrollView style={styles.container}>
+      <Text style={styles.title}>Novo Pedido</Text>
 
       <TextInput
         placeholder="Número da Mesa"
         keyboardType="numeric"
         value={tableNumber}
         onChangeText={setTableNumber}
-        style={{
-          backgroundColor: theme.colors.cardBackground,
-          borderRadius: theme.radii.md,
-          padding: theme.spacing.md,
-          marginBottom: theme.spacing.sm,
-          fontFamily: theme.fonts.regular,
-          color: theme.colors.text,
-        }}
+        style={styles.input}
       />
 
       <TextInput
         placeholder="Nome do Cliente"
         value={customerName}
         onChangeText={setCustomerName}
-        style={{
-          backgroundColor: theme.colors.cardBackground,
-          borderRadius: theme.radii.md,
-          padding: theme.spacing.md,
-          marginBottom: theme.spacing.sm,
-          fontFamily: theme.fonts.regular,
-          color: theme.colors.text,
-        }}
+        style={styles.input}
       />
 
       <TextInput
         placeholder="Observações gerais do pedido"
         value={observations}
         onChangeText={setObservations}
-        style={{
-          backgroundColor: theme.colors.cardBackground,
-          borderRadius: theme.radii.md,
-          padding: theme.spacing.md,
-          marginBottom: theme.spacing.lg,
-          fontFamily: theme.fonts.regular,
-          color: theme.colors.text,
-        }}
+        style={styles.input}
       />
 
-      <Text
-        style={{ fontFamily: theme.fonts.bold, marginBottom: theme.spacing.sm }}
-      >
-        Itens
-      </Text>
+      <Text style={styles.sectionTitle}>Itens</Text>
 
       {items.map((item, index) => (
-        <View key={index} style={{ marginBottom: theme.spacing.md }}>
+        <View key={index} style={styles.itemContainer}>
           <Picker
             selectedValue={item.productId}
             onValueChange={(value: any) =>
               updateItem(index, "productId", value)
             }
-            style={{ backgroundColor: theme.colors.cardBackground }}
+            style={styles.picker}
           >
             {products.map((product) => (
               <Picker.Item
@@ -212,37 +175,21 @@ export const NewOrderScreen = () => {
           <TextInput
             placeholder="Quantidade"
             keyboardType="numeric"
-            value={item.quantity.toString()}
-            onChangeText={(value) =>
-              updateItem(index, "quantity", parseInt(value))
-            }
-            style={{
-              backgroundColor: theme.colors.cardBackground,
-              borderRadius: theme.radii.sm,
-              padding: theme.spacing.sm,
-              marginTop: theme.spacing.sm,
-              fontFamily: theme.fonts.regular,
-              color: theme.colors.text,
-            }}
+            value={item.quantity}
+            onChangeText={(value) => updateItem(index, "quantity", value)}
+            style={styles.inputSmall}
           />
 
           <TextInput
             placeholder="Observações do item"
             value={item.observations || ""}
             onChangeText={(text) => updateItem(index, "observations", text)}
-            style={{
-              backgroundColor: theme.colors.cardBackground,
-              borderRadius: theme.radii.sm,
-              padding: theme.spacing.sm,
-              marginTop: theme.spacing.sm,
-              fontFamily: theme.fonts.regular,
-              color: theme.colors.text,
-            }}
+            style={styles.inputSmall}
           />
 
           <TouchableOpacity
             onPress={() => handleRemoveItem(index)}
-            style={{ marginTop: theme.spacing.lg }}
+            style={styles.itemButton}
           >
             <View style={styles.removeAndAddItems}>
               <AntDesign
@@ -251,23 +198,13 @@ export const NewOrderScreen = () => {
                 color={theme.colors.error}
                 style={{ marginRight: 8 }}
               />
-              <Text
-                style={{
-                  color: theme.colors.error,
-                  fontFamily: theme.fonts.bold,
-                }}
-              >
-                Remover Item
-              </Text>
+              <Text style={styles.removeText}>Remover Item</Text>
             </View>
           </TouchableOpacity>
         </View>
       ))}
 
-      <TouchableOpacity
-        onPress={handleAddItem}
-        style={{ marginBottom: theme.spacing.lg }}
-      >
+      <TouchableOpacity onPress={handleAddItem} style={styles.itemButton}>
         <View style={styles.removeAndAddItems}>
           <MaterialIcons
             name="add-circle"
@@ -275,70 +212,27 @@ export const NewOrderScreen = () => {
             color={theme.colors.primary}
             style={{ marginRight: 8 }}
           />
-          <Text
-            style={{ color: theme.colors.accent, fontFamily: theme.fonts.bold }}
-          >
-            Adicionar Item
-          </Text>
+          <Text style={styles.addText}>Adicionar Item</Text>
         </View>
       </TouchableOpacity>
 
       {loading ? (
-        <ActivityIndicator color={theme.colors.primary} size="large" />
+        <ActivityIndicator color="#2196F3" size="large" />
       ) : (
         <>
-          <TouchableOpacity
-            onPress={handleSubmit}
-            style={{
-              backgroundColor: theme.colors.primary,
-              padding: theme.spacing.md,
-              borderRadius: theme.radii.md,
-              marginBottom: theme.spacing.sm,
-            }}
-          >
-            <Text
-              style={{
-                textAlign: "center",
-                color: "#fff",
-                fontFamily: theme.fonts.bold,
-              }}
-            >
-              Confirmar Pedido
-            </Text>
+          <TouchableOpacity onPress={handleSubmit} style={styles.confirmButton}>
+            <Text style={styles.confirmButtonText}>Confirmar Pedido</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={handleCancel}
-            style={{
-              backgroundColor: theme.colors.divider,
-              padding: theme.spacing.md,
-              borderRadius: theme.radii.md,
-            }}
-          >
-            <Text
-              style={{
-                textAlign: "center",
-                fontFamily: theme.fonts.bold,
-                color: theme.colors.text,
-              }}
-            >
-              Cancelar
-            </Text>
+          <TouchableOpacity onPress={handleCancel} style={styles.cancelButton}>
+            <Text style={styles.cancelButtonText}>Cancelar</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             onPress={() => navigation.navigate("Orders")}
-            style={{ marginTop: theme.spacing.lg }}
+            style={styles.link}
           >
-            <Text
-              style={{
-                color: theme.colors.secondary,
-                fontFamily: theme.fonts.bold,
-                textAlign: "center",
-              }}
-            >
-              Ir para pedidos
-            </Text>
+            <Text style={styles.linkText}>Ir para pedidos</Text>
           </TouchableOpacity>
         </>
       )}
