@@ -63,6 +63,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // Login
   const login = async (email: string, password: string) => {
     try {
+      setLoading(true);
       const response = await api.post("/auth/login", { email, password });
 
       const { token: receivedToken, user: receivedUser } = response.data;
@@ -70,11 +71,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setToken(receivedToken);
       setUser(receivedUser);
       setAuthToken(receivedToken);
-
+      setLoading(false);
       // Salva localmente
       await AsyncStorage.setItem("token", receivedToken);
       await AsyncStorage.setItem("user", JSON.stringify(receivedUser));
     } catch (error) {
+      setLoading(false);
       console.error("Erro ao logar:", error);
       Alert.alert("Erro", "Email ou senha inválidos.");
       throw error;

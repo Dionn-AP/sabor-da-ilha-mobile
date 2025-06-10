@@ -5,6 +5,7 @@ import { theme } from "../../constants/theme";
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
+    position: "relative",
     backgroundColor: theme.colors.background,
     padding: 16,
   },
@@ -57,7 +58,7 @@ export const styles = StyleSheet.create({
   },
   iconAddNewOrder: {
     position: "absolute",
-    right: 0,
-    bottom: 10,
+    right: 20,
+    bottom: 80,
   },
 });

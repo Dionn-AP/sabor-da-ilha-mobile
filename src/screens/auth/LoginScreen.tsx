@@ -29,7 +29,6 @@ export const LoginScreen = () => {
 
   const handleLogin = async () => {
     try {
-      setLoading(true);
       await login(email, password);
 
       const storedUser = await AsyncStorage.getItem("user");
@@ -37,27 +36,9 @@ export const LoginScreen = () => {
         throw new Error("Usuário não encontrado após login.");
       }
 
-      const user = JSON.parse(storedUser);
-
-      switch (user.role) {
-        case "atendente":
-          navigation.navigate("Orders");
-          break;
-        case "cozinha":
-          navigation.navigate("Kitchen");
-          break;
-        case "gerente":
-        case "master":
-          navigation.navigate("Orders");
-          break;
-        default:
-          Alert.alert("Erro", "Tipo de usuário não reconhecido.");
-      }
-
-      setLoading(false);
+      navigation.navigate("Home");
     } catch (error) {
       console.error("Erro ao fazer login:", error);
-      setLoading(false);
       Alert.alert("Erro", "Não foi possível fazer login.");
     }
   };

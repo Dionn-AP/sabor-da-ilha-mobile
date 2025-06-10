@@ -4,16 +4,19 @@ interface ThemeColors {
   accent: string;
   background: string;
   text: string;
+  textSecondary: string;
   error: string;
   success: string;
   warning: string;
   cardBackground: string;
   divider: string;
   border?: string;
+  cardReadyOrder: string;
 }
 
 interface ThemeFonts {
   regular: string;
+  medium: string;
   bold: string;
 }
 
@@ -45,15 +48,18 @@ export const theme: AppTheme = {
     accent: "#FFD166",
     background: "#FFF8F0",
     text: "#333333",
+    textSecondary: "#666666",
     error: "#E63946",
     success: "#2EC4B6",
     warning: "#FF9F1C",
     cardBackground: "#FFFFFF",
     divider: "#F0F0F0",
     border: "#E0E0E0",
+    cardReadyOrder: "#E6FAE8",
   },
   fonts: {
     regular: "Roboto-Regular",
+    medium: "Roboto-Medium",
     bold: "Roboto-Bold",
   },
   spacing: {
