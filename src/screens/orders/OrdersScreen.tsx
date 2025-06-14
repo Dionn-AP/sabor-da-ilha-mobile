@@ -18,6 +18,7 @@ import { Order } from "../../types/orders";
 import { formatCurrencyBR } from "../../utils/formatter";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { getStatusColor } from "../../utils/statusColors";
+import { ButtonOrderHistory } from "../../components/ui/ButtonOrderHistory";
 
 type NavigationProps = NativeStackNavigationProp<RootStackParamList, "Orders">;
 
@@ -115,6 +116,9 @@ export const OrdersScreen = () => {
           )}
         />
       )}
+
+      <ButtonOrderHistory />
+
       <TouchableOpacity
         style={styles.iconAddNewOrder}
         activeOpacity={0.7}

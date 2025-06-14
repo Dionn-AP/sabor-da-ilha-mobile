@@ -1,4 +1,3 @@
-// Formatar data ISO para dd/mm/aaaa hh:mm
 export function formatDateBR(dateString: string | null): string {
   if (!dateString) return "—";
   const date = new Date(dateString);
@@ -12,7 +11,6 @@ export function formatDateBR(dateString: string | null): string {
   );
 }
 
-// Formatar valor numérico para moeda BRL
 export function formatCurrencyBR(value: number | string): string {
   const numberValue = typeof value === "string" ? parseFloat(value) : value;
   if (isNaN(numberValue)) return "R$ 0,00";

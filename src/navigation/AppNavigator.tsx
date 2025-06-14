@@ -2,7 +2,6 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-// Telas
 import { LoginScreen } from "../screens/auth/LoginScreen";
 import { SignupScreen } from "../screens/signup/SignupScreen";
 import { KitchenScreen } from "../screens/kitchen/KitchenScreen";
@@ -13,12 +12,19 @@ import { UnauthorizedScreen } from "../screens/unauthorized/UnauthorizedScreen";
 import { HomeScreen } from "../screens/home/HomeScreen";
 import { DashboardScreen } from "../screens/dashboard/DashboardScreen";
 import { MyAccountScreen } from "../screens/myAccount/MyAccountScreen";
+import { OrderHistoryScreen } from "../screens/history/OrderHistoryScreen";
+
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import { useAuth } from "../contexts/AuthContext";
 import ButtonLogout from "../components/ui/ButtonLogout";
 import { Order } from "../types/orders";
+import { styles } from "../components/ui/ButtonOrderHistory";
+import { TouchableOpacity } from "react-native";
+import { theme } from "../constants/theme";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
-// Tipagem das rotas
 export type RootStackParamList = {
   Login: undefined;
   Signup: undefined;
@@ -30,11 +36,14 @@ export type RootStackParamList = {
   Profile: undefined;
   Dashboard: undefined;
   Home: undefined;
+  History: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
+type NavigationProps = NativeStackNavigationProp<RootStackParamList, "History">;
 
 export const AppNavigator = () => {
+  const navigation = useNavigation<NavigationProps>();
   const { user } = useAuth();
   const isAuthenticated = !!user;
 
@@ -91,7 +100,18 @@ export const AppNavigator = () => {
               options={{
                 title: "Cozinha",
                 headerLeft: () => null,
-                headerRight: () => <ButtonLogout />,
+                headerRight: () => (
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    onPress={() => navigation.navigate("History")}
+                  >
+                    <AntDesign
+                      name="filetext1"
+                      size={26}
+                      color={theme.colors.background}
+                    />
+                  </TouchableOpacity>
+                ),
               }}
             />
           ) : (
@@ -142,6 +162,15 @@ export const AppNavigator = () => {
             component={MyAccountScreen}
             options={{
               title: "Perfil",
+              headerRight: () => <ButtonLogout />,
+            }}
+          />
+
+          <Stack.Screen
+            name="History"
+            component={OrderHistoryScreen}
+            options={{
+              title: "Histórico de Pedidos",
               headerRight: () => <ButtonLogout />,
             }}
           />

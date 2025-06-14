@@ -1,5 +1,3 @@
-// src/screens/orders/KitchenScreen.tsx
-
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -12,6 +10,7 @@ import {
 import { api } from "../../services/api";
 import { theme } from "../../constants/theme";
 import { styles } from "./styles";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 type OrderItem = {
   name: string;

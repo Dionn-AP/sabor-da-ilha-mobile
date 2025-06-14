@@ -12,6 +12,7 @@ interface ThemeColors {
   divider: string;
   border?: string;
   cardReadyOrder: string;
+  textLight: string;
 }
 
 interface ThemeFonts {
@@ -56,6 +57,7 @@ export const theme: AppTheme = {
     divider: "#F0F0F0",
     border: "#E0E0E0",
     cardReadyOrder: "#E6FAE8",
+    textLight: "#999",
   },
   fonts: {
     regular: "Roboto-Regular",

@@ -10,6 +10,7 @@ export type RootStackParamList = {
   Profile: undefined;
   Dashboard: undefined;
   Home: undefined;
+  History: undefined;
 };
 
 // Extensão para useNavigation

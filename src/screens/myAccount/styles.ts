@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
     textAlign: "center",
     color: theme.colors.primary,
     fontFamily: theme.fonts.regular,
-    marginBottom: theme.spacing.lg,
+    marginBottom: theme.spacing.xl,
   },
   label: {
     fontFamily: theme.fonts.bold,

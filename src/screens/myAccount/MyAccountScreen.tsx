@@ -66,7 +66,7 @@ export const MyAccountScreen = () => {
       <EvilIcons
         style={styles.changePhotoText}
         name="user"
-        size={100}
+        size={120}
         color="black"
       />
 

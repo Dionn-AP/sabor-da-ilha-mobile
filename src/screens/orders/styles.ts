@@ -61,4 +61,14 @@ export const styles = StyleSheet.create({
     right: 20,
     bottom: 80,
   },
+  iconOrderHistory: {
+    borderRadius: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: theme.colors.accent,
+    padding: 11,
+    position: "absolute",
+    right: 20,
+    bottom: 150,
+  },
 });
