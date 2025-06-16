@@ -2,10 +2,11 @@
 import React from "react";
 import { View, Text, ScrollView } from "react-native";
 import { RouteProp, useRoute } from "@react-navigation/native";
-import { RootStackParamList } from "../../navigation/AppNavigator";
+import { RootStackParamList } from "../../navigation/types";
 import { styles } from "./styles";
 import { Order } from "../../types/orders";
 import { formatCurrencyBR, formatDateBR } from "../../utils/formatter";
+import { MarkAsDeliveredButton } from "../../components/ui/MarkAsDeliveredButton";
 
 type OrderDetailsRouteProp = RouteProp<RootStackParamList, "OrderDetails">;
 
@@ -54,6 +55,8 @@ export const OrderDetailsScreen = () => {
       <Text style={styles.detail}>
         Fechado: {formatDateBR(order.closedAt!) || "–"}
       </Text>
+
+      <MarkAsDeliveredButton order={order} />
     </ScrollView>
   );
 };

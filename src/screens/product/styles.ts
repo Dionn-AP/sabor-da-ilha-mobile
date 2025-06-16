@@ -99,4 +99,9 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 10,
   },
+  iconAddNewProduct: {
+    position: "absolute",
+    right: 20,
+    bottom: 80,
+  },
 });

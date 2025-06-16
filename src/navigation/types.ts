@@ -1,8 +1,10 @@
+import { Order } from "../types/orders";
+
 export type RootStackParamList = {
   Login: undefined;
   Signup: undefined;
   Kitchen: undefined;
-  OrderDetails: { orderId: number };
+  OrderDetails: { order: Order };
   Orders: undefined;
   NewOrders: undefined;
   Unauthorized: undefined;

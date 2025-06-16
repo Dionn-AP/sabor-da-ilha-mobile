@@ -1,6 +1,5 @@
 // src/navigation/AppNavigator.tsx
 import React from "react";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import { LoginScreen } from "../screens/auth/LoginScreen";
 import { SignupScreen } from "../screens/signup/SignupScreen";
@@ -17,31 +16,18 @@ import { ProductFormScreen } from "../screens/productForm/ProductFormScreen";
 import { ProductListScreen } from "../screens/product/ProductListScreen";
 
 import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import {
+  NativeStackNavigationProp,
+  createNativeStackNavigator,
+} from "@react-navigation/native-stack";
 
 import { useAuth } from "../contexts/AuthContext";
 import ButtonLogout from "../components/ui/ButtonLogout";
 import { TouchableOpacity } from "react-native";
 import { theme } from "../constants/theme";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { User, userRole } from "../types/user";
+import { userRole } from "../types/user";
 import { RootStackParamList } from "./types";
-
-// export type RootStackParamList = {
-//   Login: undefined;
-//   Signup: undefined;
-//   Kitchen: undefined;
-//   OrderDetails: { order: Order };
-//   Orders: undefined;
-//   NewOrders: undefined;
-//   Unauthorized: undefined;
-//   Profile: undefined;
-//   Dashboard: undefined;
-//   Home: undefined;
-//   History: undefined;
-//   Products: undefined;
-//   ProductsForm: undefined;
-// };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 type NavigationProps = NativeStackNavigationProp<RootStackParamList, "History">;
@@ -179,7 +165,6 @@ export const AppNavigator = () => {
               component={ProductListScreen}
               options={{
                 title: "Produtos",
-                headerRight: () => <ButtonLogout />,
               }}
             />
           ) : (

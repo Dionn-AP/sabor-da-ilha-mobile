@@ -94,7 +94,7 @@ export const OrdersScreen = () => {
                 },
               ]}
               onPress={() =>
-                navigation.navigate("OrderDetails", { orderId: item.id })
+                navigation.navigate("OrderDetails", { order: item })
               }
             >
               <Text style={styles.orderText}>Cliente: {item.customerName}</Text>

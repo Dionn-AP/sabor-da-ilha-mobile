@@ -13,8 +13,18 @@ import ProductModal from "../../components/ui/ProductModal/ProductModal";
 import { Product } from "../../types/product";
 import { theme } from "../../constants/theme";
 import { useAuth } from "../../contexts/AuthContext";
+import { RootStackParamList } from "../../navigation/types";
+import {
+  createNativeStackNavigator,
+  NativeStackNavigationProp,
+} from "@react-navigation/native-stack";
+import { useNavigation } from "@react-navigation/native";
+import AntDesign from "@expo/vector-icons/AntDesign";
+
+type NavigationProps = NativeStackNavigationProp<RootStackParamList, "History">;
 
 export const ProductListScreen = () => {
+  const navigation = useNavigation<NavigationProps>();
   const { loading, setLoading } = useAuth();
   const [products, setProducts] = useState<Product[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -92,6 +102,13 @@ export const ProductListScreen = () => {
         product={selectedProduct}
         onSave={fetchProducts}
       />
+      <TouchableOpacity
+        style={styles.iconAddNewProduct}
+        activeOpacity={0.7}
+        onPress={() => navigation.navigate("ProductsForm")}
+      >
+        <AntDesign name="pluscircle" size={50} color={theme.colors.primary} />
+      </TouchableOpacity>
     </View>
   );
 };

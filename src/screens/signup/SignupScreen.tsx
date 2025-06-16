@@ -11,7 +11,7 @@ import { styles } from "./styles";
 import { theme } from "../../constants/theme";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../../navigation/AppNavigator";
+import { RootStackParamList } from "../../navigation/types";
 import { Ionicons } from "@expo/vector-icons";
 import { api } from "../../services/api";
 
@@ -111,7 +111,7 @@ export const SignupScreen = () => {
       <View
         style={{ flexDirection: "row", flexWrap: "wrap", marginBottom: 16 }}
       >
-        {["atendente", "cozinha", "gerente", "master"].map((r) => {
+        {["atendente", "cozinha", "gerente", "master", "estoque"].map((r) => {
           const isActive = role === r;
           return (
             <TouchableOpacity
