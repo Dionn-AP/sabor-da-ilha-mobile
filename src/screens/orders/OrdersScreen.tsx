@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../../navigation/AppNavigator";
+import { RootStackParamList } from "../../navigation/types";
 import { useAuth } from "../../contexts/AuthContext";
 import { api } from "../../services/api";
 import { styles } from "./styles";
@@ -94,7 +94,7 @@ export const OrdersScreen = () => {
                 },
               ]}
               onPress={() =>
-                navigation.navigate("OrderDetails", { order: item })
+                navigation.navigate("OrderDetails", { orderId: item.id })
               }
             >
               <Text style={styles.orderText}>Cliente: {item.customerName}</Text>

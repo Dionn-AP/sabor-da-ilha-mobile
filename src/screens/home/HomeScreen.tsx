@@ -5,6 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 import { styles } from "./styles";
 import { ROUTES } from "../../navigation/routes";
 import { useAuth } from "../../contexts/AuthContext";
+import { userRole } from "../../types/user";
 
 export const HomeScreen = () => {
   const { user } = useAuth();
@@ -20,16 +21,32 @@ export const HomeScreen = () => {
         <Text style={styles.button}>Minha Conta</Text>
       </TouchableOpacity>
 
-      {(user?.role === "atendente" || isMasterOrGerente) && (
+      {(user?.role === userRole.ATTENDANT || isMasterOrGerente) && (
         <TouchableOpacity onPress={() => navigation.navigate(ROUTES.ORDERS)}>
           <Text style={styles.button}>Pedidos</Text>
         </TouchableOpacity>
       )}
 
-      {(user?.role === "cozinha" || isMasterOrGerente) && (
+      {(user?.role === userRole.KITCHEN || isMasterOrGerente) && (
         <TouchableOpacity onPress={() => navigation.navigate(ROUTES.KITCHEN)}>
           <Text style={styles.button}>Cozinha</Text>
         </TouchableOpacity>
+      )}
+
+      {(user?.role === userRole.STOCK || isMasterOrGerente) && (
+        <>
+          <TouchableOpacity
+            onPress={() => navigation.navigate(ROUTES.PRODUCTS)}
+          >
+            <Text style={styles.button}>Produtos</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => navigation.navigate(ROUTES.PRODUCTS_FORM)}
+          >
+            <Text style={styles.button}>Cadastro de Produtos</Text>
+          </TouchableOpacity>
+        </>
       )}
 
       {isMasterOrGerente && (

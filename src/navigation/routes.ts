@@ -11,4 +11,6 @@ export const ROUTES = {
   DASHBOARD: "Dashboard",
   HOME: "Home",
   HISTORY: "OrderHistory",
+  PRODUCTS: "Products",
+  PRODUCTS_FORM: "ProductsForm",
 } as const;

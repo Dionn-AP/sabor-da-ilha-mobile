@@ -1,4 +1,3 @@
-// src/navigation/types.ts
 export type RootStackParamList = {
   Login: undefined;
   Signup: undefined;
@@ -11,9 +10,10 @@ export type RootStackParamList = {
   Dashboard: undefined;
   Home: undefined;
   History: undefined;
+  Products: undefined;
+  ProductsForm: undefined;
 };
 
-// Extensão para useNavigation
 declare global {
   namespace ReactNavigation {
     interface RootParamList extends RootStackParamList {}

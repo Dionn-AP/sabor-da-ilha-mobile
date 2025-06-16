@@ -1,9 +1,11 @@
+export type ProductCategory = "comida" | "bebida" | "sobremesa" | "outro";
+
 export interface Product {
   id: number;
   name: string;
   description: string;
-  price: string; // ou number, se quiser converter logo ao carregar
-  category: "comida" | "bebida" | "sobremesa" | "outro";
+  price: string;
+  category: ProductCategory;
   isActive: boolean;
   imageUrl: string;
   preparationTime: number;

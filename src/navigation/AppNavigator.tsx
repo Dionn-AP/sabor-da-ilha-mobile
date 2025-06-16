@@ -13,31 +13,35 @@ import { HomeScreen } from "../screens/home/HomeScreen";
 import { DashboardScreen } from "../screens/dashboard/DashboardScreen";
 import { MyAccountScreen } from "../screens/myAccount/MyAccountScreen";
 import { OrderHistoryScreen } from "../screens/history/OrderHistoryScreen";
+import { ProductFormScreen } from "../screens/productForm/ProductFormScreen";
+import { ProductListScreen } from "../screens/product/ProductListScreen";
 
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import { useAuth } from "../contexts/AuthContext";
 import ButtonLogout from "../components/ui/ButtonLogout";
-import { Order } from "../types/orders";
-import { styles } from "../components/ui/ButtonOrderHistory";
 import { TouchableOpacity } from "react-native";
 import { theme } from "../constants/theme";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { User, userRole } from "../types/user";
+import { RootStackParamList } from "./types";
 
-export type RootStackParamList = {
-  Login: undefined;
-  Signup: undefined;
-  Kitchen: undefined;
-  OrderDetails: { order: Order };
-  Orders: undefined;
-  NewOrders: undefined;
-  Unauthorized: undefined;
-  Profile: undefined;
-  Dashboard: undefined;
-  Home: undefined;
-  History: undefined;
-};
+// export type RootStackParamList = {
+//   Login: undefined;
+//   Signup: undefined;
+//   Kitchen: undefined;
+//   OrderDetails: { order: Order };
+//   Orders: undefined;
+//   NewOrders: undefined;
+//   Unauthorized: undefined;
+//   Profile: undefined;
+//   Dashboard: undefined;
+//   Home: undefined;
+//   History: undefined;
+//   Products: undefined;
+//   ProductsForm: undefined;
+// };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 type NavigationProps = NativeStackNavigationProp<RootStackParamList, "History">;
@@ -76,11 +80,15 @@ export const AppNavigator = () => {
             name="Home"
             component={HomeScreen}
             options={{
-              title: `Bem vindo ${user.name}`,
+              title: "Olá, bem vindo(a)!",
               headerRight: () => <ButtonLogout />,
             }}
           />
-          {canAccess(["atendente", "master", "gerente"]) ? (
+          {canAccess([
+            userRole.ATTENDANT,
+            userRole.MASTER,
+            userRole.MANAGER,
+          ]) ? (
             <Stack.Screen
               name="Orders"
               component={OrdersScreen}
@@ -93,7 +101,7 @@ export const AppNavigator = () => {
             <Stack.Screen name="Orders" component={UnauthorizedScreen} />
           )}
 
-          {canAccess(["cozinha", "master", "gerente"]) ? (
+          {canAccess([userRole.KITCHEN, userRole.MASTER, userRole.MANAGER]) ? (
             <Stack.Screen
               name="Kitchen"
               component={KitchenScreen}
@@ -118,7 +126,11 @@ export const AppNavigator = () => {
             <Stack.Screen name="Kitchen" component={UnauthorizedScreen} />
           )}
 
-          {canAccess(["atendente", "master", "gerente"]) ? (
+          {canAccess([
+            userRole.ATTENDANT,
+            userRole.MASTER,
+            userRole.MANAGER,
+          ]) ? (
             <Stack.Screen
               name="NewOrders"
               component={NewOrderScreen}
@@ -131,7 +143,11 @@ export const AppNavigator = () => {
             <Stack.Screen name="NewOrders" component={UnauthorizedScreen} />
           )}
 
-          {canAccess(["atendente", "master", "gerente"]) ? (
+          {canAccess([
+            userRole.ATTENDANT,
+            userRole.MASTER,
+            userRole.MANAGER,
+          ]) ? (
             <Stack.Screen
               name="OrderDetails"
               component={OrderDetailsScreen}
@@ -144,7 +160,7 @@ export const AppNavigator = () => {
             <Stack.Screen name="OrderDetails" component={UnauthorizedScreen} />
           )}
 
-          {canAccess(["master", "gerente"]) ? (
+          {canAccess([userRole.MASTER, userRole.MANAGER]) ? (
             <Stack.Screen
               name="Dashboard"
               component={DashboardScreen}
@@ -155,6 +171,32 @@ export const AppNavigator = () => {
             />
           ) : (
             <Stack.Screen name="Dashboard" component={UnauthorizedScreen} />
+          )}
+
+          {canAccess([userRole.MASTER, userRole.MANAGER, userRole.STOCK]) ? (
+            <Stack.Screen
+              name="Products"
+              component={ProductListScreen}
+              options={{
+                title: "Produtos",
+                headerRight: () => <ButtonLogout />,
+              }}
+            />
+          ) : (
+            <Stack.Screen name="Products" component={UnauthorizedScreen} />
+          )}
+
+          {canAccess([userRole.MASTER, userRole.MANAGER, userRole.STOCK]) ? (
+            <Stack.Screen
+              name="ProductsForm"
+              component={ProductFormScreen}
+              options={{
+                title: "Cadastrar Produto",
+                headerRight: () => <ButtonLogout />,
+              }}
+            />
+          ) : (
+            <Stack.Screen name="ProductsForm" component={UnauthorizedScreen} />
           )}
 
           <Stack.Screen
